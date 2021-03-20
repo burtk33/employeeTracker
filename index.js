@@ -95,23 +95,23 @@ const addEmployee = () => {
         {
             name: "firstname",
             type: "input",
-            message: "Enter their first name "
+            message: "Enter their first name: "
         },
         {
             name: "lastname",
             type: "input",
-            message: "Enter their last name "
+            message: "Enter their last name: "
         },
         {
             name: "role",
             type: "list",
-            message: "What is their role? ",
+            message: "Select their role: ",
             choices: selectRole()
         },
         {
             name: "choice",
-            type: "rawlist",
-            message: "Whats their managers name?",
+            type: "list",
+            message: "Select their manager's name:",
             choices: selectManager()
         }
     ]).then((data) => {
@@ -124,9 +124,9 @@ const addEmployee = () => {
                 manager_id: managerId,
                 role_id: roleId
 
-            }, function (err) {
+            },(err)=> {
                 if (err) throw err
-                console.table(val)
+                console.table(data)
                 menu();
             })
 
@@ -147,7 +147,6 @@ const selectRole = () => {
 }
 
 //establish array of choices for manager
-
 const selectManager = () => {
     let managersArray = [];
     connection.query("SELECT first_name, last_name FROM employee WHERE manager_id IS NULL",(err, res)=> {
