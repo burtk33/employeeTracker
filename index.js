@@ -127,8 +127,8 @@ const addEmployee = () => {
             choices: selectManager()
         }
     ]).then((data) => {
-        var roleId = selectRole().indexOf(data.role) + 2;
-        var managerId = selectManager().indexOf(data.manager) + 2;
+        let roleId = selectRole().indexOf(data.role) + 2;
+        let managerId = selectManager().indexOf(data.manager) + 2;
         connection.query("INSERT INTO employee SET ?",
             {
                 first_name: data.firstName,
@@ -210,8 +210,8 @@ const removeEmployee = () => {
                 name: "lastName",
                 message: "Select the employee to remove",
                 choices: function() {
-                    var lastName = [];
-                    for (var i = 0; i < res.length; i++) {
+                    let lastName = [];
+                    for (let i = 0; i < res.length; i++) {
                       lastName.push(res[i].last_name);
                     }
                     return lastName;
