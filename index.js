@@ -21,12 +21,13 @@ connection.connect((err) => {
 
 //console menu for selecting actions
 const menu = () => {
+    console.log("EMPLOYEE TRACKER\n=================================================")
     inquirer.prompt([
         {
             type: 'list',
             name: 'menu',
             message: 'What would you like to do?',
-            choices: ['View all employees', 'View all employees by department', 'View all employees by role', 'Add employee', 'Remove employee', 'Update employee role', 'Exit']
+            choices: ['View all employees', 'View all employees by department', 'View all employees by role', 'Add employee','Add role', 'Add department', 'Remove employee', 'Exit']
         }
     ]).then((selection) => {
         let menuSelect = selection.menu;
@@ -47,17 +48,21 @@ const menu = () => {
                 addEmployee();
                 break;
             }
+            case 'Add role': {
+                addRole();
+                break;
+            }
+            case 'Add department': {
+                updateRole();
+                break;
+            }
             case 'Remove employee': {
                 removeEmployee();
                 break;
             }
-            case 'Update employee role': {
-                updateRole();
-                break;
-            }
             case 'Exit': {
                 console.log("Goodbye!")
-                break;
+                process.exit();
             }
 
         }
@@ -140,51 +145,40 @@ const addEmployee = () => {
     })
 }
 
-//update employee role function
-const updateRole = () => {
-    connection.query("SELECT employee.last_name, role.title FROM employee JOIN role ON employee.role_id = role.id;",
-        (err, res) => {
-            if (err) throw err
-            inquirer.prompt([
-                {
-                    name: "lastName",
-                    type: "list",
-                    message: "Select the employee's last name: ",
-                    choices: function() {
-                        var lastName = [];
-                        for (var i = 0; i < res.length; i++) {
-                          lastName.push(res[i].last_name);
-                        }
-                        return lastName;
-                      }
-                },
-                {
-                    name: "role",
-                    type: "list",
-                    message: "Select employee's new role: ",
-                    choices: selectRole()
-                },
-            ]).then((data) => {
-                var roleId = selectRole().indexOf(data.role) + 1
-                connection.query("UPDATE employee SET WHERE ?",
-                    {
-                        last_name: data.lastName
+const addRole = () => {
+    inquirer.prompt([
+        {
+            name: "title",
+            type: "input",
+            message: "Enter their role title: "
+        },
+        {
+            name: "salary",
+            type: "input",
+            message: "Enter role salary: "
+        },
+        {
+            name: "department",
+            type: "list",
+            message: "Select the department: ",
+            choices: selectDept()
+        }
+    ]).then((data) => {
+        let deptId = selectDept().indexOf(data.department)+2;
+        connection.query("INSERT INTO role SET ?",{
+            title:data.title,
+            salary:data.salary,
+            department_id:deptId
+        },
+            (err) => {
+                if (err) throw err
+                console.table(data)
+                menu();
+            })
 
-                    },
-                    {
-                        role_id: roleId
-
-                    },
-                    function (err) {
-                        if (err) throw err
-                        console.table(data);
-                        menu();
-                    })
-
-            });
-        });
-
+    })
 }
+
 
 const removeEmployee = () => {
     connection.query("SELECT * FROM employee", (err,res)=>{
@@ -225,6 +219,18 @@ const selectRole = () => {
 
     })
     return roleArray;
+}
+
+const selectDept = () => {
+    let deptArray = [];
+    connection.query("SELECT * FROM department", (err, res) => {
+        if (err) throw err
+        for (let i = 0; i < res.length; i++) {
+            deptArray.push(res[i].name);
+        }
+
+    })
+    return deptArray;
 }
 
 //establish array of choices for manager
