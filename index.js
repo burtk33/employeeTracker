@@ -35,7 +35,7 @@ const menu = () => {
                 break;
             }
             case 'View all employees by department': {
-                displayAllbByDept();
+                displayAllByDept();
                 break;
             }
             case 'View all employees by role': {
@@ -72,22 +72,32 @@ const menu = () => {
 const displayAllEmployees = () => {
     connection.query("SELECT employee.first_name AS 'First Name', employee.last_name AS 'Last Name', role.title AS 'Title', role.salary AS 'Salary', department.name AS 'Department', CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee INNER JOIN role on role.id = employee.role_id INNER JOIN department on department.id = role.department_id left join employee e on employee.manager_id = e.id;",
      (err, res)=> {
-            if (err) throw err
-            console.table(res)
-            menu()
+            if (err) throw err;
+            console.table(res);
+            menu();
         }
     )
 }
 
-////display to console all employees in database based on role
+//display to console all employees in database based on role
 const displayAllByRole = () => {
     connection.query("SELECT employee.first_name AS 'First Name', employee.last_name AS 'Last Name', role.title AS 'Title' FROM employee JOIN role ON employee.role_id = role.id;",
      (err, res)=> {
-            if (err) throw err
-            console.table(res)
+            if (err) throw err;
+            console.table(res);
             menu();
         })
 }
+
+//display to console all employees in database based on role
+const displayAllByDept=()=> {
+    connection.query("SELECT employee.first_name, employee.last_name, department.name AS Department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id ORDER BY employee.id;", 
+    (err, res)=> {
+      if (err) throw err;
+      console.table(res);
+      menu();
+    })
+  }
 
 //add employee prompt and function
 const addEmployee = () => {
