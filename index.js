@@ -25,7 +25,7 @@ const menu = () => {
             type: 'list',
             name: 'menu',
             message: 'What would you like to do?',
-            choices: ['View all employees', 'View all employees by department', 'View all epmloyees by manager', 'Add employee', 'Remove employee', 'Update employee role', 'Update employee manager', 'Exit']
+            choices: ['View all employees', 'View all employees by department', 'View all employees by role', 'Add employee', 'Remove employee', 'Update employee role', 'Update employee manager', 'Exit']
         }
     ]).then((selection) => {
         let menuSelect = selection.menu;
@@ -38,8 +38,8 @@ const menu = () => {
                 displayAllbByDept();
                 break;
             }
-            case 'View all employees by manager': {
-                displayAllByMgnr();
+            case 'View all employees by role': {
+                displayAllByRole();
                 break;
             }
             case 'Add employee': {
@@ -78,3 +78,12 @@ const displayAllEmployees = () => {
         }
     )
 }
+
+const displayAllByRole=()=> {
+    connection.query("SELECT employee.first_name AS 'First Name', employee.last_name AS 'Last Name', role.title AS 'Title' FROM employee JOIN role ON employee.role_id = role.id;", 
+    function(err, res) {
+    if (err) throw err
+    console.table(res)
+    menu();
+    })
+  }
