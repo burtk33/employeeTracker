@@ -3,6 +3,7 @@ const inquirer = require('inquirer');
 const mysql = require('mysql');
 const cTable = require('console.table');
 
+
 //database connection
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -91,7 +92,7 @@ const displayAllByRole = () => {
 
 //display to console all employees in database based on role
 const displayAllByDept=()=> {
-    connection.query("SELECT employee.first_name, employee.last_name, department.name AS Department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id ORDER BY employee.id;", 
+    connection.query("SELECT employee.first_name AS 'First Name', employee.last_name AS 'Last Name', department.name AS 'Department' FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id ORDER BY employee.id;", 
     (err, res)=> {
       if (err) throw err;
       console.table(res);
@@ -103,12 +104,12 @@ const displayAllByDept=()=> {
 const addEmployee = () => {
     inquirer.prompt([
         {
-            name: "firstname",
+            name: "firstName",
             type: "input",
             message: "Enter their first name: "
         },
         {
-            name: "lastname",
+            name: "lastName",
             type: "input",
             message: "Enter their last name: "
         },
@@ -119,14 +120,14 @@ const addEmployee = () => {
             choices: selectRole()
         },
         {
-            name: "choice",
+            name: "manager",
             type: "list",
             message: "Select their manager's name:",
             choices: selectManager()
         }
     ]).then((data) => {
-        var roleId = selectRole().indexOf(data.role) + 1
-        var managerId = selectManager().indexOf(data.choice) + 1
+        var roleId = selectRole().indexOf(data.role)+2;
+        var managerId = selectManager().indexOf(data.manager)+2;
         connection.query("INSERT INTO employee SET ?",
             {
                 first_name: data.firstName,
