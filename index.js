@@ -220,7 +220,8 @@ const removeEmployee = () => {
         ]).then((data) => {
             connection.query("DELETE FROM employee WHERE last_name=?", data.lastName, (err, res) => {
                 if (err) throw (err);
-                console.log(`Employee with last name ${data.lastName} has been removed`)
+                console.log(`Employee with last name ${data.lastName} has been removed`);
+                menu();
             })
         })
     })
