@@ -13,11 +13,12 @@
 ## Description
 A CLI application that tracks employee information via a mySQL database. Allows user to add, view and delete employees, roles and departments. 
 
-
 ![screenshot](./assets/images/employeeTracker.png)
 
 ## Installation Instructions
 Must have Node.js and node package modules "inquirer", "mysql", and "console.table" installed. Requires a connection to a mySQL database.
+
+[Installation and Usage Walkthrough Video](https://www.youtube.com/watch?v=QwD_ANNERoA)
 
 ## Usage
 Used to manage an employee database via terminal command line
