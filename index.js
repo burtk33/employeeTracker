@@ -53,7 +53,7 @@ const menu = () => {
                 break;
             }
             case 'Add department': {
-                updateRole();
+                addDept();
                 break;
             }
             case 'Remove employee': {
@@ -145,6 +145,7 @@ const addEmployee = () => {
     })
 }
 
+//function to add a role to the database
 const addRole = () => {
     inquirer.prompt([
         {
@@ -179,7 +180,28 @@ const addRole = () => {
     })
 }
 
+//function to add a department to the database
+const addDept = () => {
+    inquirer.prompt([
+        {
+            name: "deptName",
+            type: "input",
+            message: "Enter department name: "
+        }
+    ]).then((data) => {
+        connection.query("INSERT INTO department SET ?",{
+            name:data.deptName
+        },
+            (err) => {
+                if (err) throw err
+                console.table(data)
+                menu();
+            })
 
+    })
+}
+
+//function to remove employee from database
 const removeEmployee = () => {
     connection.query("SELECT * FROM employee", (err,res)=>{
         inquirer.prompt([
@@ -221,6 +243,7 @@ const selectRole = () => {
     return roleArray;
 }
 
+//establish array of choice for departments
 const selectDept = () => {
     let deptArray = [];
     connection.query("SELECT * FROM department", (err, res) => {
